@@ -1,0 +1,32 @@
+<form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+  <label for="amount">Amount</label>
+  <input id="amount" type="number" formControlName="amount" />
+  <div
+    *ngIf="mainForm.get('amount')?.invalid && mainForm.get('amount')?.touched"
+    class="error-message"
+  >
+    <span *ngIf="mainForm.get('amount')?.hasError('min')"
+      >Amount must be at least 0.</span
+    >
+    <span *ngIf="mainForm.get('amount')?.hasError('max')"
+      >Amount cannot be greater than 300.</span
+    >
+  </div>
+
+  <div formArrayName="damagedParts">
+    <label
+      *ngFor="let part of ['roof', 'front', 'side', 'rear']; let i = index"
+    >
+      <input type="checkbox" [formControlName]="i" /> {{ part }}
+    </label>
+  </div>
+
+  <lib-nested-fields
+    [categories]="categories"
+    [amount]="mainForm.get('amount')?.value"
+    formControlName="nestedFields"
+  ></lib-nested-fields>
+  <button type="submit" [disabled]="mainForm.invalid || mainForm.pending">
+    Submit
+  </button>
+</form>

@@ -1,0 +1,76 @@
+<div [formGroup]="nestedForm">
+  <label for="allocation">Allocation</label>
+  <input
+    id="allocation"
+    type="number"
+    formControlName="allocation"
+    [class.ng-invalid]="
+      nestedForm.get('allocation')?.invalid &&
+      nestedForm.get('allocation')?.touched
+    "
+  />
+  <div
+    *ngIf="
+      nestedForm.get('allocation')?.invalid &&
+      nestedForm.get('allocation')?.touched
+    "
+    class="error-message"
+  >
+    Allocation must be greater than or equal to 0 and less than {{ amount }}.
+  </div>
+
+  <label for="category">Category</label>
+  <select id="category" formControlName="category">
+    <option *ngFor="let category of categories" [value]="category.slug">
+      {{ category.name }}
+    </option>
+  </select>
+  <div
+    *ngIf="
+      nestedForm.get('category')?.hasError('required') &&
+      nestedForm.get('category')?.touched
+    "
+    class="error-message"
+  >
+    Category is required.
+  </div>
+
+  <div formArrayName="witnesses">
+    <div
+      *ngFor="let witness of witnesses.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <label for="witnessName">Witness Name</label>
+      <input id="witnessName" formControlName="name" type="text" />
+      <div
+        *ngIf="
+          witness.get('name')?.hasError('required') &&
+          witness.get('name')?.touched
+        "
+        class="error-message"
+      >
+        Name is required.
+      </div>
+
+      <label for="witnessEmail">Witness Email</label>
+      <input id="witnessEmail" formControlName="email" type="email" />
+      <div
+        *ngIf="witness.get('email')?.invalid && witness.get('email')?.touched"
+        class="error-message"
+      >
+        <span *ngIf="witness.get('email')?.hasError('required')"
+          >Email is required.</span
+        >
+        <span *ngIf="witness.get('email')?.hasError('email')"
+          >Invalid email format.</span
+        >
+        <span *ngIf="witness.get('email')?.hasError('emailExists')"
+          >Email already exists.</span
+        >
+        <span *ngIf="witness.get('email')?.pending">Validating email...</span>
+      </div>
+      <button type="button" (click)="removeWitness(i)">Remove Witness</button>
+    </div>
+    <button type="button" (click)="addWitness()">Add Witness</button>
+  </div>
+</div>
