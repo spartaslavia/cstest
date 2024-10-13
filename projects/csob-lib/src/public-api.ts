@@ -2,5 +2,5 @@
  * Public API Surface of csob-lib
  */
 
-export * from './lib/csob-lib.service';
-export * from './lib/csob-lib.component';
+export * from './lib/main-form/main-form.component';
+export * from './lib/nested-fields/nested-fields.component';
